@@ -1,6 +1,6 @@
 (ns test-case.core
   (:import java.util.Date)
-  (:gen-class))
+  (:require [clojure.string :as str]))
 
 (def v [42 "foo" 99.2 [5 12]])
 
@@ -10,14 +10,20 @@
                "foo" 88
                42 false})
 
-(defn make-user
-  [username & {:keys [email join-date]
-               :or {join-date (java.util.Date.)}}]
-  {:username username
-   :join-date join-date
-   :email email
-   ;; 2.592e9 -> one month in ms
-   :exp-date (java.util.Date. (long (+ 2.592e9 (.getTime join-date))))})
+(defn make-another-user
+  [{:keys [name surname phone email] :as user-info}]
+  (let [full-name (str/join " " [name surname])]
+    (prn #(str/split email #"@"))
+    (str full-name ", contact information: phone-> " phone " email-> " email"..")))
+
+;; (defn make-user
+;;   [username & {:keys [email join-date]
+;;                :or {join-date (java.util.Date.)}}]
+;;   {:username username
+;;    :join-date join-date
+;;    :email email
+;;    ;; 2.592e9 -> one month in ms
+;;    :exp-date (java.util.Date. (long (+ 2.592e9 (.getTime join-date))))})
 
 ;;Variadic function
 (def strange-adder (fn
@@ -36,8 +42,3 @@
   (let [x-2 (* x x)
         y-2 (* y y)]
     (Math/sqrt (x-2 y-2))))
-
-(defn -main
-  "I don't do a whole lot ... yet."
-  [& args]
-  (println "Hello, World!"))
